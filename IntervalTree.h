@@ -4,6 +4,11 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+/*
+Implentación en base a la Sección 14.3 del Libro de INTRODUCTIÓN TO ALGORITHNS 3TH
+29/11/2022
+AED 2022B
+*/
 class IntervalTree
 {
 private:
