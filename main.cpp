@@ -32,5 +32,15 @@ int main(){
     string archivo3 = "Salid3.dot";
     Itree.dot(archivo3);
 
+    bool Encontrado = Itree.search(5,8);
+    if (Encontrado == true)
+    {
+        cout<<endl<<"Existe y esta vivo"<<endl;
+    }else{
+        cout<<endl<<"No hay nada manito"<<endl;
+    }
+
+
+    
     return 0;
 }
