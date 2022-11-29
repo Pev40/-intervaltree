@@ -1,7 +1,9 @@
 #ifndef __NODE_H__
 #define __NODE_H__
 #include "Interval.h"
-
+#include <string.h>
+#include <iostream>
+#include <fstream>
 class Node
 {
 private:
@@ -24,6 +26,16 @@ public:
     Node* getIzquierda();
     int getMax();
     Interval* getIntervalo();
+
+    void dot(std::ostream &file){
+        file<<"node_"<<intervalo->getLow()<<"_"<<intervalo->getHigh()<<" [label = \"<l> | <m> "<< intervalo->getLow()<<"_"<<intervalo->getHigh() <<" | <r>\"];\n";
+        if(izq){
+            file<<"node_"<<intervalo->getLow()<<"_"<<intervalo->getHigh()<<":l -> node_"<<izq->intervalo->getLow()<<"_"<<izq->intervalo->getHigh() <<":m;\n";
+        }
+        if(der){
+            file<<"node_"<<intervalo->getLow()<<"_"<<intervalo->getHigh()<<":r -> node_"<<der->intervalo->getLow()<<"_"<<der->intervalo->getHigh()<<":m;\n";
+        }
+    }
 };
 
 Node::Node()
@@ -62,6 +74,9 @@ void Node::setIntervalo(int min,int max){
     }
 
 }
+
+
+
 
 Node::~Node()
 {
