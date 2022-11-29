@@ -10,11 +10,27 @@ private:
     Node *head;
 
 public:
+    //CONSTRUCTORES
     IntervalTree();
     IntervalTree(int, int);
+    // Insertar
     void insert(int, int);
+    // Impresion
     void print();
     void print(Node *);
+    // Verificar Arbol Esperado
+    void preorden(Node *);
+    void inorden(Node *);
+    void posorden(Node *);
+    void preorden();
+    void inorden();
+    void posorden();
+    // Eliminar un nodo de rango
+    void deleteNode(Node*, int,int);
+    void deleteNode(int,int);
+    Node* levantarDerecha(Node*);
+    Node* levantarIzquierda(Node*);
+    // Graficar con Grafiph
     void dot(std::string);
     void dot(std::ofstream &file, Node* current);
     ~IntervalTree();
@@ -87,24 +103,38 @@ void IntervalTree::insert(int min, int max)
     }
 }
 
-void IntervalTree::print(Node *actual)
-{
-    if (actual == nullptr)
-    {
-        return;
+void IntervalTree::preorden(Node* actual){
+    if(actual!=nullptr){
+        std::cout << "<" << actual->getIntervalo()->getLow() << "-" << actual->getIntervalo()->getHigh()<<" >" << std::endl;
+        preorden(actual->getIzquierda());
+        preorden(actual->getDerecha());
     }
-    std::cout << "<" << actual->getIntervalo()->getLow() << "," << actual->getIntervalo()->getHigh() << " max=" << actual->getMax() << ">" << std::endl;
-    print(actual->getIzquierda());
-    print(actual->getDerecha());
-}
-
-void IntervalTree::print()
-{
-    print(head);
     return;
 }
 
-    // Plotting a Tree
+void IntervalTree::inorden(Node* actual){
+    if(actual!=nullptr){
+        inorden(actual->getIzquierda());
+        std::cout << "<" << actual->getIntervalo()->getLow() << "-" << actual->getIntervalo()->getHigh() <<" >"<< std::endl;
+        inorden(actual->getDerecha());
+    }
+    return;
+}
+
+void IntervalTree::posorden(Node* actual){
+    if(actual!=nullptr){
+        posorden(actual->getIzquierda());
+        std::cout << "<" << actual->getIntervalo()->getLow() << "-" << actual->getIntervalo()->getHigh() <<" >"<< std::endl;
+        posorden(actual->getDerecha());
+    }
+    return;
+}
+
+void IntervalTree::preorden(){preorden(this->head);return;}
+void IntervalTree::inorden(){inorden(this->head);return;}
+void IntervalTree::posorden(){posorden(this->head);return;}
+
+// Plotting a Tree
 void IntervalTree::dot(std::string filename){
     std::ofstream mydot;
     mydot.open(filename, std::ios::out);
@@ -112,6 +142,7 @@ void IntervalTree::dot(std::string filename){
     mydot << "node [shape=record, height=0.1];\n";
     dot(mydot, this->head);
     mydot << "}";
+
     mydot.close();
 }
 void IntervalTree::dot(std::ofstream &file, Node* current){
@@ -125,7 +156,82 @@ void IntervalTree::dot(std::ofstream &file, Node* current){
     }
 }
 
+// Eliminar un rango
 
+Node* IntervalTree::levantarDerecha(Node* actual){
+    if(actual->getDerecha() == nullptr){
+        return actual;
+    }
+    return levantarDerecha(actual->getDerecha());
+}
+
+Node* IntervalTree::levantarIzquierda(Node* actual){
+    if(actual->getIzquierda() == nullptr){
+        return actual;
+    }
+    return levantarIzquierda(actual->getIzquierda());
+}
+
+void IntervalTree::deleteNode(Node* actual, int min, int max){
+    // Casos Base
+    if(actual == nullptr){
+        std::cout<<"No existe el rango"<<std::endl;
+        //std::cout<<"Arbol Vacio"<<std::endl
+        return;
+    }
+    if(min == actual->getIntervalo()->getLow() && max == actual->getIntervalo()->getHigh()){
+        //std::cout<<"Se Encontro"<<std::endl;
+        if (actual->getDerecha() != nullptr)
+        {
+            //std::cout<<"Caso1"<<std::endl;
+            Node* derechaExtremo = levantarDerecha(actual->getDerecha());
+            actual->getIntervalo()->setHigh(derechaExtremo->getIntervalo()->getHigh());
+            actual->getIntervalo()->setLow(derechaExtremo->getIntervalo()->getLow());
+            derechaExtremo = nullptr;
+            //delete derechaExtremo;
+        }
+        
+        if (actual->getIzquierda() != nullptr)
+        {
+            //std::cout<<"Caso2"<<std::endl;
+            Node* izquierdaExtremo = levantarIzquierda(actual->getIzquierda());
+            actual->getIntervalo()->setHigh(izquierdaExtremo->getIntervalo()->getHigh());
+            actual->getIntervalo()->setLow(izquierdaExtremo->getIntervalo()->getLow());
+            izquierdaExtremo = nullptr;
+            //delete izquierdaExtremo;
+        }
+        else{
+            //std::cout<<"Me elimine"<<std::endl;
+            
+            delete actual;
+        }
+        return;
+        
+
+    }
+    //
+    if (actual->getIntervalo()->getLow() <= min)
+    {
+        //std::cout<<"Derecha"<<std::endl;
+        return deleteNode(actual->getDerecha(),min,max);
+    }
+    if (actual->getIntervalo()->getLow() >= min)
+    {
+        //std::cout<<"Izquierda"<<std::endl;
+        return deleteNode(actual->getIzquierda(),min,max);
+    }
+
+}
+
+void IntervalTree::deleteNode(int min,int max){
+    if(max < min){
+        int temp = min;
+        max = min;
+        min = temp;
+    }
+    deleteNode(this->head, min, max);
+    return;
+}
 
 IntervalTree::~IntervalTree()
 {

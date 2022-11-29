@@ -14,8 +14,23 @@ int main(){
     Itree.insert(0,3);
     Itree.insert(6,10);
     Itree.insert(19,20);
-    Itree.print();
+    cout<<"Pos"<<endl;
+    Itree.posorden();
+    cout<<"In"<<endl;
+    Itree.inorden();
+    cout<<"Pre"<<endl;
+    Itree.preorden();
     string archivo = "Salid.dot";
     Itree.dot(archivo);
+
+    Itree.deleteNode(5,8);
+    string archivo2 = "Salid2.dot";
+    Itree.dot(archivo2);
+
+
+    Itree.insert(5,8);
+    string archivo3 = "Salid3.dot";
+    Itree.dot(archivo3);
+
     return 0;
 }
