@@ -1,0 +1,68 @@
+
+#include <iostream>
+using namespace std;
+
+class Interval
+{
+    public:
+        int low, high;
+        Interval(int low , int high)
+        {
+            this->low = low;
+            this->high = high;
+        }
+        Interval (Interval i)
+        {
+            i.low = low ;
+            i.high = high;
+        }
+       
+       
+}
+
+class Node
+{   
+    private:
+        Node *head;
+        Interval *i;  
+        int max;
+        Nodo *left, *right;
+        
+    public:
+        Node newNode(Interval newInterval){
+            Node *temp = new Node;
+            temp->newInterval = new Interval(i);
+            temp->max = newInterval.high;
+            temp->left = temp->right = NULL;
+            return temp;
+        }
+        
+        Node InsertNode(head , Interval newInterval )
+        {   
+            if (head == NULL)
+                return newNode(newInterval);
+                
+            int datalow = head->newInterval->low;
+           
+            if (newInterval.low < datalow){
+                head->left = InsertNode(head->left, newInterval);
+            } 
+            
+            else{
+                head->right = InsertNode(head->right, newInterval);
+            }
+            
+            if (head->max < newInterval.high) //Se actualiza el valor de max cada vez que añadimos un nodo
+            {
+                max = newInterval.high;
+            }
+            
+            return head;
+            
+        }
+        void EliminarNode();
+        void BuscarNode();
+}
+
+
+
